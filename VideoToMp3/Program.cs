@@ -1,13 +1,19 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System;
+using System.Threading;
 
 namespace VideoToMp3
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            IWebDriver driver;
+            VideoToMp3V1 downloader1 = new VideoToMp3V1();
+
+            downloader1.downloadWithDriver();
+
+
         }
     }
 }
