@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Threading;
+using System.IO;
 
 namespace VideoToMp3
 {
@@ -14,36 +15,38 @@ namespace VideoToMp3
         public List<String> fileList;
         public String projectPath;
 
-        public VideoToMp3V1() {
+        public VideoToMp3V1()
+        {
             projectPath = AppDomain.CurrentDomain.BaseDirectory;
             readDownloadLink();
         }
 
         public void readDownloadLink()
         {
-            fileList = System.IO.File.ReadAllLines(projectPath + @"../../../Files/downloadLink.txt").ToList();
+            fileList = System.IO.File.ReadAllLines(Path.GetFullPath("../../../Files/downloadLink.txt")).ToList();
         }
 
         public void downloadWithDriver()
         {
-            
-            projectPath = AppDomain.CurrentDomain.BaseDirectory;
-            string driverPath = projectPath + "../../../Files";
+            string driverPath = Path.GetFullPath("../../../Files");
 
             foreach (var link in fileList)
             {
                 try
                 {
-                    ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+                    ChromeDriverService service = ChromeDriverService.CreateDefaultService(driverPath);
                     service.HideCommandPromptWindow = false;
 
                     var options = new ChromeOptions();
-                    options.AddArgument("--window-position=0,0");
+                    options.AddArgument("--window-position=1,1");
+                    options.AddArgument("incognito");
+                    options.AddExcludedArgument("headless");
 
-                    IWebDriver driver = new ChromeDriver(service, options);
+                    ChromeDriver driver = new ChromeDriver(service, options);
                     driver.Url = "https://ytmp3.cc/";
                     driver.Navigate().GoToUrl("https://ytmp3.cc/");
                     Thread.Sleep(3000);
+
                     /**
                     WebElement url = driver.FindElement(By.id("input"));
                     url.click();
@@ -55,9 +58,11 @@ namespace VideoToMp3
                     download.click();
                     Thread.sleep(3000);
                     */
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine("Interrupted: " + link + "");
+                    Console.WriteLine(e.ToString());
                 }
             }
         }
