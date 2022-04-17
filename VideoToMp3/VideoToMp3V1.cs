@@ -29,6 +29,7 @@ namespace VideoToMp3
         public void downloadWithDriver()
         {
             string driverPath = Path.GetFullPath("../../../Files");
+            string InterruptedListPath = Path.GetFullPath("../../../Files/interruptedLinks.txt");
 
             foreach (var link in fileList)
             {
@@ -38,31 +39,26 @@ namespace VideoToMp3
                     service.HideCommandPromptWindow = false;
 
                     var options = new ChromeOptions();
-                    options.AddArgument("--window-position=1,1");
-                    options.AddArgument("incognito");
-                    options.AddExcludedArgument("headless");
+                    options.AddArgument("--window");
 
                     ChromeDriver driver = new ChromeDriver(service, options);
                     driver.Url = "https://ytmp3.cc/";
                     driver.Navigate().GoToUrl("https://ytmp3.cc/");
                     Thread.Sleep(3000);
 
-                    /**
-                    WebElement url = driver.FindElement(By.id("input"));
-                    url.click();
-                    url.sendKeys(links[i]);
-                    WebElement convertForm = driver.findElement(By.id("submit"));
-                    convertForm.submit();
-                    Thread.sleep(10000);
-                    WebElement download = driver.findElement(By.xpath("/html/body/div[2]/div[1]/div[1]/div[3]/a[1]"));
-                    download.click();
-                    Thread.sleep(3000);
-                    */
+                    var url = driver.FindElement(By.Id("input"));
+                    url.Click();
+                    url.SendKeys(link);
+                    var convertForm = driver.FindElement(By.Id("submit"));
+                    convertForm.Submit();
+                    Thread.Sleep(10000);
+                    var download = driver.FindElement(By.XPath("/html/body/div[2]/div[1]/div[1]/div[3]/a[1]"));
+                    download.Click();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Interrupted: " + link + "");
-                    Console.WriteLine(e.ToString());
+                    System.IO.File.AppendAllText(InterruptedListPath, link + "\n");
                 }
             }
         }
