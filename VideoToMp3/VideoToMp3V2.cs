@@ -1,21 +1,22 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using System.Threading;
-using System.IO;
 
 namespace VideoToMp3
 {
-    class VideoToMp3V1
+    //https://ytmp3hub.com/
+    //
+    class VideoToMp3V2
     {
         public List<String> fileList;
         public String projectPath;
 
-        public VideoToMp3V1()
+        public VideoToMp3V2()
         {
             projectPath = AppDomain.CurrentDomain.BaseDirectory;
             readDownloadLink();
@@ -42,22 +43,21 @@ namespace VideoToMp3
                     options.AddArgument("--window");
 
                     ChromeDriver driver = new ChromeDriver(service, options);
-                    driver.Url = "https://ytmp3.cc/";
-                    driver.Navigate().GoToUrl("https://ytmp3.cc/");
+                    driver.Url = "https://ytmp3hub.com/";
                     Thread.Sleep(3000);
 
-                    var url = driver.FindElement(By.Id("input"));
+                    var url = driver.FindElement(By.XPath("/html/body/div/main/div/div[1]/div[1]/div/div[2]/div/div/div/div/input"));
                     url.Click();
                     url.SendKeys(link);
-                    var convertForm = driver.FindElement(By.Id("submit"));
-                    convertForm.Submit();
+                    var convertForm = driver.FindElement(By.CssSelector("body > div > main > div > div:nth-child(1) > div.bg-gradient-to-r.from-green-400.to-blue-500 > div > div.py-12 > div > div > div > div > button"));
+                    Thread.Sleep(3000);
+                    convertForm.Click();
                     Thread.Sleep(10000);
-                    var download = driver.FindElement(By.XPath("/html/body/div[2]/div[1]/div[1]/div[3]/a[1]"));
-                    download.Click();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("\n\nInterrupted: " + link + "\n\n");
+                    Console.WriteLine(e.ToString());
                     System.IO.File.AppendAllText(InterruptedListPath, link + "\n");
                 }
             }

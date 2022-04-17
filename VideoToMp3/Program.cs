@@ -10,9 +10,9 @@ namespace VideoToMp3
     {
         public static void Main(string[] args)
         {
-            VideoToMp3V1 downloader1 = new VideoToMp3V1();
+            VideoToMp3V2 downloader2 = new VideoToMp3V2();
 
-            downloader1.downloadWithDriver();
+            downloader2.downloadWithDriver();
 
         }
     }
