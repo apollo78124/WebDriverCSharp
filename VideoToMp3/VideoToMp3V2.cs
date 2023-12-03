@@ -41,6 +41,7 @@ namespace VideoToMp3
 
                     var options = new ChromeOptions();
                     options.AddArgument("--window");
+                    options.AddExtensions("D:/adblock/5.8.1_0.crx");
 
                     ChromeDriver driver = new ChromeDriver(service, options);
                     driver.Url = "https://ytmp3hub.com/";
@@ -52,7 +53,7 @@ namespace VideoToMp3
                     var convertForm = driver.FindElement(By.CssSelector("body > div > main > div > div:nth-child(1) > div.bg-gradient-to-r.from-green-400.to-blue-500 > div > div.py-12 > div > div > div > div > button"));
                     Thread.Sleep(3000);
                     convertForm.Click();
-                    Thread.Sleep(10000);
+                    Thread.Sleep(1000);
                 }
                 catch (Exception e)
                 {
